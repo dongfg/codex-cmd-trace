@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"image/color"
 	"math"
 	"os"
@@ -553,26 +552,4 @@ func runGUI(parent context.Context, root string, history bool, interval time.Dur
 	a.Run()
 	cancel()
 	<-producerDone
-}
-
-func demoFeed(ctx context.Context, send func(commandEvent)) {
-	examples := demoExamples()
-	for i, r := range examples {
-		select {
-		case <-ctx.Done():
-			return
-		case <-time.After(800 * time.Millisecond):
-		}
-		e := commandEvent{Kind: "started", Key: fmt.Sprint(i), ID: fmt.Sprintf("demo-%02d", i+1), Time: time.Now().Format("15:04:05"), Description: r.Description, Commands: []string{r.Description}, SessionTitle: "演示"}
-		send(e)
-		select {
-		case <-ctx.Done():
-			return
-		case <-time.After(600 * time.Millisecond):
-		}
-		e.Kind = "result"
-		e.Paired = true
-		e.Results = []commandResult{r}
-		send(e)
-	}
 }

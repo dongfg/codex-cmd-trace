@@ -7,7 +7,7 @@ on:
       - '**'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   package:
@@ -66,3 +66,18 @@ jobs:
           if-no-files-found: error
           compression-level: 0
           retention-days: 30
+      - name: Publish GitHub Release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+          PACKAGE_PATH: ${{ steps.archive.outputs.path }}
+        run: |
+          gh release view "$env:RELEASE_TAG" --json tagName 2>$null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload "$env:RELEASE_TAG" "$env:PACKAGE_PATH" --clobber
+          } else {
+            gh release create "$env:RELEASE_TAG" "$env:PACKAGE_PATH" --verify-tag --title "$env:RELEASE_TAG" --generate-notes
+          }
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
