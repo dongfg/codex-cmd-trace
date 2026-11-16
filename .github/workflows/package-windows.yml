@@ -42,6 +42,7 @@ jobs:
       - name: Build Windows application
         run: |
           mkdir -p dist/package
+          windres -i assets/windows.rc -O coff -o app_windows_amd64.syso
           go build -ldflags "-s -w -H=windowsgui -extldflags=-static" -o dist/package/CodexCommandTrace.exe .
           cp README.md dist/package/README.md
           cd dist/package

@@ -43,6 +43,18 @@ go build -ldflags '-s -w -H=windowsgui -extldflags=-static' -o dist/CodexCommand
 
 `ci` 标签用于无图形显示环境下的测试；实际桌面构建不使用该标签。Windows 构建静态链接编译器运行库，仍依赖系统自带的窗口和 OpenGL 组件。
 
+## 应用图标
+
+透明图标源文件为 `assets/app.png`，通过 `app_icon.go` 嵌入并设置为 Fyne 应用图标。Windows EXE 使用 `assets/app.ico`，包含 16、20、24、32、40、48、64、128 和 256 像素的 32 位透明图像。
+
+`app_windows_amd64.syso` 为已生成的 Windows x64 图标资源，普通 `go build` 会自动链接。替换 PNG 后，在 Windows 上使用以下脚本重新生成 ICO 和资源文件（需要 MinGW 的 `windres`，可传入完整路径）：
+
+```powershell
+.\scripts\update-icon.ps1 -Windres 'C:\path\to\windres.exe'
+```
+
+如果编译器不在 PATH 中，请先将其 bin 目录加入当前会话的 PATH，供资源编译器预处理使用。提交图标修改时同时提交 PNG、ICO 和 `.syso`；Actions 构建时还会从 ICO 重新编译 Windows 资源，确保发布程序携带图标。
+
 ## 日志监听与命令配对
 
 默认监听 `$CODEX_HOME/sessions`，未设置时使用用户目录下 `.codex/sessions`。默认从现有文件末尾开始，新文件从头读取；`-history` 可读取已有历史。目录事件触发增量读取，每 3 秒扫描补查，支持新建子目录、文件截短或替换，以及跨写入的半行 JSON。

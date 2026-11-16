@@ -278,6 +278,7 @@ func runGUI(parent context.Context, root string, history bool, interval time.Dur
 	ctx, cancel := context.WithCancel(parent)
 	defer cancel()
 	a := app.NewWithID("io.github.dongfg.codex-cmd-trace")
+	a.SetIcon(appIcon)
 	if absolute, err := filepath.Abs(root); err == nil {
 		root = absolute
 	}
