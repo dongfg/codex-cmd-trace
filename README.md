@@ -2,7 +2,9 @@
 
 将 Codex 执行的命令和对应输出展示为桌面卡片。半透明科幻风格、逐字输入动画、平滑输出滚动，也可以把每条新命令展示在独立窗口中。
 
-[▶ 观看 Codex Command Trace 演示视频](./demo.mp4)
+https://github.com/user-attachments/assets/96658b66-2ccd-40ee-8596-4289ce138591
+
+
 
 ## 下载
 
